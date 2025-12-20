@@ -20,15 +20,6 @@ away.columns = ["date", "team", "opponent", "team_score", "opponent_score", "win
 away["win"] = (away["team_score"] > away["opponent_score"]).astype(int)
 
 matches_long = pd.concat([home, away], ignore_index=True)
-matches_long = matches_long.sort_values(by=['team', 'date'])
-matches_long["avg_goals_last_5"] = (
-    matches_long.groupby("team")["team_score"]
-    .transform(lambda x: x.rolling(window=5, min_periods=1).mean().shift(1))
-)
-matches_long["win_rate_last_5"] = (
-    matches_long.groupby("team")["win"]
-    .transform(lambda x: x.rolling(window=5, min_periods=1).mean().shift(1))
-)
 matches_long = matches_long.sort_values(by=['date', 'team'])
 matches_long.dropna(inplace=True)
-matches_long.to_csv('./data/features/team_features.csv', index=False)
+matches_long.to_csv('./data/processed/processed.csv', index=False)
